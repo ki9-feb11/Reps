@@ -1,4 +1,23 @@
 Rails.application.routes.draw do
-  devise_for :users
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  # ユーザーログイン
+  devise_for :users, skip: [:registrations, :password], controllers: {
+    sessions: "public/sessions"
+  }
+
+   #管理者ログイン
+  devise_for :admins, skip: [:registrations, :password], controllers: {
+    sessions: "admin/sessions"
+  }
+
+  #管理者用ルーティング
+  namespace :admin do
+  end
+
+
+
+  #ユーザー用ルーティング
+  scope module: :public do
+  end
+
 end
