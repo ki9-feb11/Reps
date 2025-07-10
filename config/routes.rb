@@ -12,12 +12,16 @@ Rails.application.routes.draw do
 
   #管理者用ルーティング
   namespace :admin do
+    root to: 'homes#top'
+    get '/about', to: 'homes#about'
   end
 
 
 
   #ユーザー用ルーティング
   scope module: :public do
+    root to: 'homes#top'
+    get '/about', to: 'homes#about'
   end
 
 end
