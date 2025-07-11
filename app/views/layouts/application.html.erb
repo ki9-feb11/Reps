@@ -11,12 +11,12 @@
   </head>
 
   <body>
-  <!-- 管理者と会員でヘッダーを切り替え -->
-  <% if controller.controller_path.starts_with?("admin/") %>
-    <%= render 'layouts/admin_header' %>
-  <% else %>
-    <%= render 'layouts/header' %>
-  <% end %>
+    <!-- 管理者と会員でヘッダーを切り替え -->
+    <% if controller.controller_path.starts_with?("admin/") %>
+      <%= render 'layouts/admin_header' %>
+    <% else %>
+      <%= render 'layouts/header' %>
+    <% end %>
     <%= yield %>
   </body>
 </html>
