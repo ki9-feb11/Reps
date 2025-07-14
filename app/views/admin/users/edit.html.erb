@@ -17,13 +17,18 @@
   </div>
 
   <div class="form-group">
-    <%= form.label :password, 'パスワード（確認）' %>
-    <%= form.password_field :password_confirmation, class: 'form-control', required: true %>
+    <%= form.label :position, '役職' %>
+    <%= form.select :position, User.positions.keys.map { |k| [t("enums.user.positon.#{k}"), k]}, {}, class: "form-control" %>
   </div>
 
-  <div class="form-group form-check">
-    <%= form.check_box :admin, class: 'form-check-input' %>
-    <%= form.label :admin, '管理者権限', class: 'form-check-label' %>
+  <div class="form-group">
+    <%= form.label :region, '担当地域' %>
+    <%= form.select :region, options_for_select(["愛知", "岐阜", "三重", "静岡"], @user.region), {}, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :password, 'パスワード' %>
+    <%= form.password_field :password, class: 'form-control', required: true %>
   </div>
 
   <%= form.submit 'ユーザーを更新', class: 'btn btn-primary' %>

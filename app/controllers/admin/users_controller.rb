@@ -1,5 +1,5 @@
 class Admin::UsersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
   # 管理者か確認
   before_action :ensure_admin
 
@@ -32,7 +32,7 @@ class Admin::UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      redirect_to user_path(user.id), notice: 'ユーザー #{@user.email}が更新されました。'
+      redirect_to admin_user_path(@user.id), notice: 'ユーザー #{@user.email}が更新されました。'
     else
       render :edit
     end
@@ -47,10 +47,12 @@ class Admin::UsersController < ApplicationController
   private
 
   def ensure_admin
-    redirect_to root_path unless current_user.admin?
+    unless current_admin
+      redirect_to root_path, alert: '管理者としてログインしてください'
+    end
   end
 
   def user_params
-    params.require(:user).permit(:email, :name, :password_comformation, :position, :region)
+    params.require(:user).permit(:email, :last_name, :first_name, :password, :position, :region)
   end
 end

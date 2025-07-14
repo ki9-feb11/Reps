@@ -3,4 +3,14 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+  
+  has_many :posts, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
+
+  enum position: {
+    staff: 0,
+    leader: 1,
+    manager: 2,
+    executive: 3
+  }
 end

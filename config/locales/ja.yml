@@ -1,0 +1,8 @@
+ja:
+  enums:
+    user:
+      position:
+        staff: 一般
+        leader: リーダー
+        manager: マネージャー
+        executive: 役員
