@@ -1,0 +1,17 @@
+<h2>投稿編集</h2>
+
+<%= form_with model: @post, local: true do |f| %>
+  <% if @post.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @post.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= render partial: "form", locals: { f: f } %>
+
+  <%= f.submit "更新する", class: "btn btn-primary" %>
+<% end %>
