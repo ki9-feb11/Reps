@@ -12,7 +12,7 @@ class Admin::CustomersController < ApplicationController
   end
 
   def new
-    @cuntomer = Customer.new
+    @customer = Customer.new
   end
 
   def create
@@ -30,16 +30,22 @@ class Admin::CustomersController < ApplicationController
 
   def update
     @customer =  Customer.find(params[:id])
-    if @customer.update(admin_customer_params)
+    if @customer.update(customer_params)
       redirect_to admin_customer_path(@customer), notice: "顧客情報を更新しました。"
     else
       render :edit
     end
   end
 
+  def destroy
+    @customer = Customer.find(params[:id])
+    @customer.destroy
+    redirect_to admin_customers_path, notice: "顧客を削除しました。"
+  end
+
   private
 
-  def admin_customer_params
-    params.require(:customer).permit(:name, :address, :industry, :contact_person, :key_parson, :notes)
+  def customer_params
+    params.require(:customer).permit(:name, :adress, :industry, :contact_person, :key_person, :notes)
   end
 end

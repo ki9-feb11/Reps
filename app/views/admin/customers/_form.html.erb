@@ -1,0 +1,44 @@
+<%= form_with model: [:admin, @customer], local: true do |f| %>
+  <% if customer.errors.any? %>
+    <div class="alert alert-danger">
+      <h4>エラーが発生しました</h4>
+      <ul>
+        <% customer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "顧客名" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :adress, "住所" %>
+    <%= f.text_field :adress, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :industry, "業種" %>
+    <%= f.text_field :industry, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :contact_person, "担当者" %>
+    <%= f.text_field :contact_person, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :key_person, "キーマン" %>
+    <%= f.text_field :key_person, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :notes, "備考" %>
+    <%= f.text_area :notes, rows: 4, class: "form-control" %>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>

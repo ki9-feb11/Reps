@@ -1,2 +1,5 @@
-<h1>Admin::Customers#new</h1>
-<p>Find me in app/views/admin/customers/new.html.erb</p>
+<h1>顧客新規登録</h1>
+
+<%= render "form", customer: @customer %>
+
+<%= link_to "戻る", admin_customers_path, class: "btn btn-secondary mt-3" %>
