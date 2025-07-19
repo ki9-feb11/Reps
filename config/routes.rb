@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get '/about', to: 'homes#about'
     resources :users
     resources :customers
+    resources :products
   end
 
 

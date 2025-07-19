@@ -1,0 +1,43 @@
+<%= form_with model: [:admin, product], local: true do |f| %>
+  <% if product.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "商品名" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :manufacturer, "メーカー" %>
+    <%= f.select :manufacturer, ["コクヨ", "キングジム", "パイロット", "ぺんてる", "トンボ", "ゼブラ", "三菱鉛筆", "リヒト", "シヤチハタ", "キヤノン", "ナイキ", "生興", "その他"], {}, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :category, "カテゴリー" %>
+    <%= f.select :category, ["文具", "家具", "OA機器", "日用雑貨", "その他"], {}, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :list_price, "定価（円）" %>
+    <%= f.number_field :list_price, step: 0.01, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :wholesale_price, "卸単価（円）" %>
+    <%= f.number_field :wholesale_price, step: 0.01, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cost_price, "原価（円）" %>
+    <%= f.number_field :cost_price, step: 0.01, class: "form-control" %>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>
