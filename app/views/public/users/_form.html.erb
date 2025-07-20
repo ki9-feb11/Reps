@@ -1,0 +1,38 @@
+<%= form_with model: user, local: true do |form| %>
+  <% if user.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :last_name, '姓' %>
+    <%= form.text_field :last_name, class: 'form-control', required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :first_name, '名' %>
+    <%= form.text_field :first_name, class: 'form-control', required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :email, "メールアドレス" %>
+    <%= form.email_field :email, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :position, "役職" %>
+    <%= form.select :position, User.positions.keys.map { |p| [p, p] }, {}, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :region, "担当地域" %>
+    <%= form.select :region, ["愛知", "岐阜", "三重", "静岡"], {}, class: "form-select" %>
+  </div>
+
+  <%= form.submit "更新する", class: "btn btn-primary" %>
+<% end %>

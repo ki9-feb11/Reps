@@ -1,0 +1,30 @@
+<h2><%= @post.title %></h2>
+
+<p><strong>顧客名：</strong> <%= @post.customer.name %></p>
+<p><strong>商談内容：</strong><br><%= simple_format(@post.body) %></p>
+<p><strong>ステータス：</strong> <%= @post.status_i18n %></p>
+<p><strong>商談結果：</strong> <%= @post.result_status_i18n %></p>
+<p><strong>顧客の反応：</strong> <%= @post.reaction_i18n %></p>
+<p><strong>投稿日時：</strong> <%= l(@post.created_at, format: :short) %></p>
+
+<h4>提案商品一覧</h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th>商品名</th>
+      <th>数量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @post.post_products.each do |pp| %>
+      <tr>
+        <td><%= pp.product.name %></td>
+        <td><%= pp.quantity %> 個</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "編集", edit_post_path(@post), class: "btn btn-outline-primary" %>
+<%= link_to "削除", post_path(@post), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-danger" %>
+<%= link_to "一覧に戻る", posts_path, class: "btn btn-secondary" %>

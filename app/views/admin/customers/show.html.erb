@@ -1,0 +1,13 @@
+<h1><%= @customer.name %> の詳細</h1>
+
+<table class="table">
+  <tr><th>住所</th><td><%= @customer.adress %></td></tr>
+  <tr><th>業種</th><td><%= @customer.industry %></td></tr>
+  <tr><th>担当者</th><td><%= @customer.contact_person %></td></tr>
+  <tr><th>キーマン</th><td><%= @customer.key_person %></td></tr>
+  <tr><th>備考</th><td><%= simple_format(@customer.notes) %></td></tr>
+</table>
+
+<%= link_to "編集", edit_admin_customer_path(@customer), class: "btn btn-primary" %>
+<%= link_to "一覧へ戻る", admin_customers_path, class: "btn btn-secondary" %>
+<%= button_to "削除", admin_customer_path(@customer), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-danger ms-auto" %>

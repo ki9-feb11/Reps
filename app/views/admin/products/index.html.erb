@@ -1,0 +1,30 @@
+<h1>商品一覧</h1>
+
+<%= link_to "新規商品登録", new_admin_product_path, class: "btn btn-primary mb-3" %>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>商品名</th>
+      <th>メーカー</th>
+      <th>カテゴリー</th>
+      <th>定価</th>
+      <th>卸単価</th>
+      <th>原価</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= link_to product.name, admin_product_path(product) %></td>
+        <td><%= product.manufacturer %></td>
+        <td><%= product.category %></td>
+        <td><%= number_to_currency(product.list_price, unit: "¥") %></td>
+        <td><%= number_to_currency(product.wholesale_price, unit: "¥") %></td>
+        <td><%= number_to_currency(product.cost_price, unit: "¥") %></td>
+        <td><%= link_to "編集", edit_admin_product_path(product), class: "btn btn-sm btn-outline-secondary" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

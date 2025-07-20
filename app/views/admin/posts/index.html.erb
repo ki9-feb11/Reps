@@ -1,0 +1,28 @@
+<h2>投稿一覧</h2>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>投稿ID</th>
+      <th>投稿者</th>
+      <th>タイトル</th>
+      <th>投稿日</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr>
+        <td><%= post.id %></td>
+        <td><%= post.user&.email || "未登録ユーザー" %></td>
+        <td><%= link_to post.title, admin_post_path(post) %></td>
+        <td><%= post.created_at.strftime("%Y/%m/%d") %></td>
+        <td>
+          <%= link_to "削除", admin_post_path(post), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-sm btn-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @posts %>

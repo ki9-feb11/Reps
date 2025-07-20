@@ -1,0 +1,27 @@
+<h1>顧客一覧（管理者）</h1>
+
+<%= link_to "新規顧客登録", new_admin_customer_path, class: "btn btn-primary mb-3" %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>顧客名</th>
+      <th>住所</th>
+      <th>業種</th>
+      <th>担当者</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @customers.each do |customer| %>
+      <tr>
+        <td><%= link_to customer.name, admin_customer_path(customer) %></td>
+        <td><%= customer.adress %></td>
+        <td><%= customer.industry %></td>
+        <td><%= customer.contact_person %></td>
+        <td><%= link_to "編集", edit_admin_customer_path(customer), class: "btn btn-sm btn-outline-secondary" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

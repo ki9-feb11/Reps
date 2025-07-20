@@ -1,0 +1,29 @@
+ja:
+  activerecord:
+    attributes:
+      user:
+        position:
+          staff: 一般
+          leader: リーダー
+          manager: マネージャー
+          executive: 役員
+
+      post:
+        status:
+          progressing: 進行中
+          completed: 完了
+          canceled: キャンセル
+        result_status:
+          negotiating: 商談中
+          ordered: 受注
+          lost: 失注
+          pending: 保留
+          postponed: 延期
+          aborted: 中止
+          no_response: 反応なし
+        reaction:
+          very_positive: 非常にポジティブ
+          positive: ポジティブ
+          neutral: 変化なし
+          negative: ネガティブ
+          very_negative: 非常にネガティブ

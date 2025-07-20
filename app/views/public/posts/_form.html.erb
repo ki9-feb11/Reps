@@ -1,0 +1,61 @@
+<%= form_with model: post, local: true do |f| %>
+  <% if post.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :title, "タイトル" %>
+    <%= f.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :customer_id, "顧客名" %>
+    <%= f.collection_select :customer_id, customers, :id, :name, { include_blank: "選択してください" }, { class: "form-select" } %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :body, "商談内容" %>
+    <%= f.text_area :body, class: "form-control", rows: 5 %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :status, "ステータス" %>
+    <%= f.select :status, Post.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :result_status, "商談結果" %>
+    <%= f.select :result_status, Post.result_statuses.keys.map { |r| [r.humanize, r] }, {}, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :reaction, "顧客の反応" %>
+    <%= f.select :reaction, Post.reactions.keys.map { |r| [r.humanize, r] }, {}, class: "form-select" %>
+  </div>
+
+  <h4>提案商品と数量</h4>
+  <%= f.fields_for :post_products do |pp| %>
+    <div class="mb-3 row">
+      <div class="col-md-6">
+        <%= pp.label :product_id, "商品" %>
+        <%= pp.collection_select :product_id, Product.all, :id, :name, { include_blank: "選択してください" }, class: "form-select" %>
+      </div>
+      <div class="col-md-4">
+        <%= pp.label :quantity, "数量" %>
+        <%= pp.number_field :quantity, min: 1, class: "form-control" %>
+      </div>
+      <div class="col-md-2">
+        <%= pp.check_box :_destroy %>
+        <%= pp.label :_destroy, "削除" %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= f.submit "保存する", class: "btn btn-primary" %>
+<% end %>

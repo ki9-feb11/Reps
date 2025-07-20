@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Pitas</title>
+    <title>Reps</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <script src="https://kit.fontawesome.com/b5424952b8.js" crossorigin="anonymous"></script>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
+    <!-- 管理者と会員でヘッダーを切り替え -->
+    <% if controller.controller_path.starts_with?("admin/") %>
+      <%= render 'layouts/admin_header' %>
+    <% else %>
+      <%= render 'layouts/header' %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

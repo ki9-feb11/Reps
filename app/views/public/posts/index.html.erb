@@ -1,0 +1,31 @@
+<h2>商談記録一覧</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>顧客名</th>
+      <th>ステータス</th>
+      <th>商談結果</th>
+      <th>顧客の反応</th>
+      <th>作成日</th>
+      <th>詳細</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr>
+        <td><%= post.title %></td>
+        <td><%= post.customer.name %></td>
+        <td><%= post.status_i18n %></td>
+        <td><%= post.result_status_i18n %></td>
+        <td><%= post.reaction_i18n %></td>
+        <td><%= l(post.created_at, format: :short) %></td>
+        <td><%= link_to "詳細", post_path(post), class: "btn btn-sm btn-outline-info" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @posts %>
+<%= link_to "新規商談記録を作成", new_post_path, class: "btn btn-primary" %>
