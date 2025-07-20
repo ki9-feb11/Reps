@@ -1,0 +1,13 @@
+<div class="container mt-5">
+  <div class="text-center">
+    <h1 class="display-4 fw-bold">Reps（レップス）</h1>
+    <p class="lead">営業活動をもっと効率的に、もっと見える化</p>
+    <hr class="my-4">
+    <% if user_signed_in? %>
+      <%= link_to "マイページへ", mypage_path, class: "btn btn-primary btn-lg" %>
+    <% else %>
+      <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-primary btn-lg me-2" %>
+      <%= link_to "管理者ログイン", new_admin_session_path, class: "btn btn-outline-secondary btn-lg" %>
+    <% end %>
+  </div>
+</div>

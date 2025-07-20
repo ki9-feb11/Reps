@@ -19,7 +19,7 @@ class Public::PostsController < ApplicationController
   end
 
   def index
-    @posts = current_user.posts.includes(:tags, :products).order(created_at: :desc)
+    @posts = current_user.posts.includes(:products).order(created_at: :desc)
 
     #ページネーション
     @posts = @posts.page(params[:page]).per(10)
@@ -49,7 +49,7 @@ class Public::PostsController < ApplicationController
   private
 
   def set_post
-    @post = current_user.posts.find(prams[:id])
+    @post = current_user.posts.find(params[:id])
   end
 
   def post_params

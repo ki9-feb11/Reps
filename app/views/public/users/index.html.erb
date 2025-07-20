@@ -1,0 +1,22 @@
+<h2>ユーザー一覧</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>役職</th>
+      <th>地域</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.position %></td>
+        <td><%= user.region %></td>
+        <td><%= link_to "詳細", public_user_path(user), class: "btn btn-sm btn-outline-info" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

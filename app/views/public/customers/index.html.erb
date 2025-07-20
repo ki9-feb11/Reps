@@ -12,10 +12,10 @@
   <tbody>
     <% @customers.each do |customer| %>
       <tr>
-        <td><%= link_to customer.name, public_customer_path(customer) %></td>
+        <td><%= link_to customer.name, customer_path(customer) %></td>
         <td><%= customer.adress %></td>
         <td><%= customer.industry %></td>
-        <td><%= link_to "詳細", public_customer_path(customer), class: "btn btn-sm btn-outline-primary" %></td>
+        <td><%= link_to "詳細", customer_path(customer), class: "btn btn-sm btn-outline-primary" %></td>
       </tr>
     <% end %>
   </tbody>

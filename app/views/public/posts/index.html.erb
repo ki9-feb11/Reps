@@ -21,11 +21,11 @@
         <td><%= post.result_status_i18n %></td>
         <td><%= post.reaction_i18n %></td>
         <td><%= l(post.created_at, format: :short) %></td>
-        <td><%= link_to "詳細", public_post_path(post), class: "btn btn-sm btn-outline-info" %></td>
+        <td><%= link_to "詳細", post_path(post), class: "btn btn-sm btn-outline-info" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <%= paginate @posts %>
-<%= link_to "新規商談記録を作成", new_public_post_path, class: "btn btn-primary" %>
+<%= link_to "新規商談記録を作成", new_post_path, class: "btn btn-primary" %>

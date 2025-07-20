@@ -1,6 +1,6 @@
 <h1>顧客情報を編集</h1>
 
-<%= form_with model: [:public, @customer], local: true do |f| %>
+<%= form_with model: @customer, local: true do |f| %>
   <% if @customer.errors.any? %>
     <div class="alert alert-danger">
       <ul>
@@ -29,4 +29,4 @@
   <%= f.submit "保存", class: "btn btn-primary" %>
 <% end %>
 
-<%= link_to "戻る", public_customer_path(@customer), class: "btn btn-secondary mt-3" %>
+<%= link_to "戻る", customer_path(@customer), class: "btn btn-secondary mt-3" %>
