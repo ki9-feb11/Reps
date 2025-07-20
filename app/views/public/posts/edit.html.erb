@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <%= render partial: "form", locals: { f: f } %>
+  <%= render "form", post: @post, customers: @customers %>
 
   <%= f.submit "更新する", class: "btn btn-primary" %>
 <% end %>

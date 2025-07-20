@@ -5,6 +5,7 @@ class Public::PostsController < ApplicationController
   def new
     @post = current_user.posts.new
     @customers = Customer.all
+    3.times { @post.post_products.new }
   end
 
   def create

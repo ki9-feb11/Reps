@@ -11,52 +11,7 @@
     </div>
   <% end %>
 
-  <!-- 商談記録入力欄 -->
-  <div class="mb-3">
-    <%= f.label :title, "タイトル" %>
-    <%= f.text_field :title, class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :content, "内容" %>
-    <%= f.text_area :content, rows: 5, class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :reaction_rating, "顧客の反応（5段階）" %>
-    <%= f.select :reaction_rating, options_for_select(1..5), {}, class: "form-select" %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :visited_on, "訪問日" %>
-    <%= f.date_field :visited_on, class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :tag_ids, "タグ" %>
-    <%= f.collection_check_boxes :tag_ids, Tag.all, :id, :name do |tag| %>
-      <div class="form-check">
-        <%= tag.check_box(class: "form-check-input") %>
-        <%= tag.label(class: "form-check-label") %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="mb-3">
-    <h5>商品と数量</h5>
-    <%= f.fields_for :post_products do |ppf| %>
-      <div class="row mb-2">
-        <div class="col">
-          <%= ppf.label :product_id, "商品" %>
-          <%= ppf.collection_select :product_id, Product.all, :id, :name, {}, class: "form-select" %>
-        </div>
-        <div class="col">
-          <%= ppf.label :quantity, "数量" %>
-          <%= ppf.number_field :quantity, class: "form-control", min: 1 %>
-        </div>
-      </div>
-    <% end %>
-  </div>
+  <%= render "form", post: @post, customers: @customers %>
 
   <%= f.submit "投稿する", class: "btn btn-primary" %>
 <% end %>
