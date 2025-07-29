@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :show, :edit, :update]
     resources :posts
     resources :customers, only: [:index, :show, :edit, :update]
+    resources :products, only: [:index, :show]
   end
 
 end
