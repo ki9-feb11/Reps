@@ -5,6 +5,7 @@ class Public::PostsController < ApplicationController
   def new
     @post = current_user.posts.new
     @customers = Customer.all
+    @tags = Tag.all
     3.times { @post.post_products.new }
   end
 
@@ -14,6 +15,7 @@ class Public::PostsController < ApplicationController
       redirect_to @post, notice: "投稿を作成しました。"
     else
       @customers = Customer.all
+      @tags = Tag.all
       render :new
     end
   end
@@ -32,6 +34,7 @@ class Public::PostsController < ApplicationController
 
   def edit
     @customers = Customer.all
+    @tags = Tag.all
   end
 
   def update
@@ -39,6 +42,7 @@ class Public::PostsController < ApplicationController
       redirect_to @post, notice: "投稿を更新しました。"
     else
       @customers = Customer.all
+      @tags = Tag.all
       render :edit
     end
   end
@@ -57,7 +61,6 @@ class Public::PostsController < ApplicationController
   def post_params
     params.require(:post).permit(
       :title, :body, :status, :result_status, :reaction, :result_notes,
-      :customer_id, :product_id, :quantity)
+      :customer_id, :product_id, :quantity, tag_ids: [])
   end
-
 end

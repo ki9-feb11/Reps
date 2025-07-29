@@ -24,6 +24,16 @@
     <% end %>
   </tbody>
 </table>
+
+<!-- タグ表示 --!>
+<p><strong>タグ：</strong>
+  <% if @post.tags.any? %>
+    <%= @post.tags.map(&:name).join(", ") %>
+  <% else %>
+    （タグなし）
+  <% end %>
+</p>
+
 <% if @post.user == current_user %>
   <%= link_to "編集", edit_post_path(@post), class: "btn btn-outline-primary" %>
   <%= link_to "削除", post_path(@post), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-danger" %>

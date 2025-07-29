@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     resources :products
     resources :posts, only: [:index, :show, :destroy]
     resources :comments, only: [:index, :destroy]
+    resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]
   end
 
 

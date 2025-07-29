@@ -1,0 +1,25 @@
+<h2>タグ一覧</h2>
+
+<%= link_to "新規タグ作成", new_admin_tag_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>タグ名</th>
+      <th>投稿数</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tags.each do |tag| %>
+      <tr>
+        <td><%= tag.name %></td>
+        <td><%= tag.post_tags.count %></td>
+        <td>
+          <%= link_to "編集", edit_admin_tag_path(tag) %> |
+          <%= link_to "削除", admin_tag_path(tag), method: :delete, data: { confirm: "本当に削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
