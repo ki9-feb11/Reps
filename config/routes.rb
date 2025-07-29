@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :customers
     resources :products
     resources :posts, only: [:index, :show, :destroy]
+    resources :comments, only: [:index, :destroy]
   end
 
 
@@ -28,7 +29,9 @@ Rails.application.routes.draw do
     get '/about', to: 'homes#about'
     get 'users/mypage', to: 'users#mypage', as: :mypage
     resources :users, only: [:index, :show, :edit, :update]
-    resources :posts
+    resources :posts do
+      resources :comments, only: [:create, :destroy]
+    end
     resources :customers, only: [:index, :show, :edit, :update]
   end
 

@@ -4,6 +4,7 @@ class Post < ApplicationRecord
   has_many :post_products, dependent: :destroy
   has_many :products, through: :post_products
   has_many :post_tags, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   accepts_nested_attributes_for :post_products, allow_destroy: true
 

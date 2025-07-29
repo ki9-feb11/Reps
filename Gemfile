@@ -68,6 +68,8 @@ gem 'kaminari'
 # レイアウト調整
 gem 'bootstrap', '~> 5.3.0'
 
+gem 'jquery-rails'
+
 gem 'dotenv-rails'
 
 group :production do
