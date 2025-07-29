@@ -1,27 +1,95 @@
-<h1>商品一覧</h1>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-box me-2 text-primary"></i>
+      商品一覧
+    </h2>
+  </div>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>商品名</th>
-      <th>メーカー</th>
-      <th>カテゴリー</th>
-      <th>定価</th>
-      <th>卸単価</th>
-      <th>原価</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
+  <!-- 商品カード一覧 -->
+  <div class="row">
     <% @products.each do |product| %>
-      <tr>
-        <td><%= link_to product.name, product_path(product) %></td>
-        <td><%= product.manufacturer %></td>
-        <td><%= product.category %></td>
-        <td><%= number_to_currency(product.list_price, unit: "¥") %></td>
-        <td><%= number_to_currency(product.wholesale_price, unit: "¥") %></td>
-        <td><%= number_to_currency(product.cost_price, unit: "¥") %></td>
-      </tr>
+      <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm product-card">
+          <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 class="card-title mb-0 text-truncate">
+                <i class="fas fa-cube me-2 text-primary"></i>
+                <%= product.name %>
+              </h5>
+              <span class="badge bg-success">
+                <%= product.respond_to?(:category) ? product.category : '商品' %>
+              </span>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <!-- 商品の説明 -->
+            <% if product.respond_to?(:description) && product.description.present? %>
+              <p class="card-text text-muted small mb-3">
+                <%= truncate(product.description, length: 80) %>
+              </p>
+            <% end %>
+
+            <!-- 価格 -->
+            <% if product.respond_to?(:price) %>
+              <div class="mb-3">
+                <small class="text-muted">価格</small>
+                <p class="mb-0 fs-5 fw-bold text-success">
+                  <i class="fas fa-yen-sign me-1"></i>
+                  <%= number_with_delimiter(product.price) %>
+                </p>
+              </div>
+            <% end %>
+
+            <!-- 使用統計 -->
+            <% if product.respond_to?(:post_products) %>
+              <div class="row text-center mb-3">
+                <div class="col-6">
+                  <div class="border-end">
+                    <div class="fw-bold text-primary"><%= product.post_products.count %></div>
+                    <small class="text-muted">提案回数</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="fw-bold text-info">
+                    <%= product.post_products.joins(:post).where('posts.created_at > ?', 1.month.ago).count %>
+                  </div>
+                  <small class="text-muted">今月</small>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="card-footer bg-white border-top">
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="fas fa-calendar-alt me-1"></i>
+                <%= product.respond_to?(:created_at) ? l(product.created_at, format: :short) : '作成日不明' %>
+              </small>
+              <div class="btn-group" role="group">
+                <%= link_to "詳細", product_path(product), 
+                    class: "btn btn-sm btn-outline-info" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <!-- 空状態 -->
+  <% if @products.empty? %>
+    <div class="text-center py-5">
+      <div class="mb-3">
+        <i class="fas fa-box-open fa-3x text-muted"></i>
+      </div>
+      <h4 class="text-muted">商品が見つかりません</h4>
+    </div>
+  <% end %>
+
+  <!-- ページネーション -->
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @products if respond_to?(:paginate) %>
+  </div>
+</div>

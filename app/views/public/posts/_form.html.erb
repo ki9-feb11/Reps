@@ -1,67 +1,158 @@
-<%= form_with model: post, local: true do |f| %>
+
+<%= form_with model: post, local: true, class: "needs-validation", novalidate: true do |f| %>
+  <!-- エラーメッセージ -->
   <% if post.errors.any? %>
-    <div class="alert alert-danger">
-      <ul>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <h6 class="alert-heading">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        入力内容にエラーがあります
+      </h6>
+      <ul class="mb-0">
         <% post.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   <% end %>
 
-  <div class="mb-3">
-    <%= f.label :title, "タイトル" %>
-    <%= f.text_field :title, class: "form-control" %>
-  </div>
+  <div class="row">
+    <!-- 左カラム：基本情報 -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="fas fa-info-circle me-2"></i>基本情報
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :title, "タイトル", class: "form-label fw-medium" %>
+            <%= f.text_field :title, class: "form-control", placeholder: "商談のタイトルを入力してください" %>
+          </div>
 
-  <div class="mb-3">
-    <%= f.label :customer_id, "顧客名" %>
-    <%= f.collection_select :customer_id, customers, :id, :name, { include_blank: "選択してください" }, { class: "form-select" } %>
-  </div>
+          <div class="mb-3">
+            <%= f.label :customer_id, "顧客名", class: "form-label fw-medium" %>
+            <%= f.collection_select :customer_id, customers, :id, :name, 
+                { include_blank: "顧客を選択してください" }, 
+                { class: "form-select" } %>
+          </div>
 
-  <div class="mb-3">
-    <%= f.label :body, "商談内容" %>
-    <%= f.text_area :body, class: "form-control", rows: 5 %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :status, "ステータス" %>
-    <%= f.select :status, Post.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "form-select" %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :result_status, "商談結果" %>
-    <%= f.select :result_status, Post.result_statuses.keys.map { |r| [r.humanize, r] }, {}, class: "form-select" %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :reaction, "顧客の反応" %>
-    <%= f.select :reaction, Post.reactions.keys.map { |r| [r.humanize, r] }, {}, class: "form-select" %>
-  </div>
-
-  <h4>提案商品と数量</h4>
-  <%= f.fields_for :post_products do |pp| %>
-    <div class="mb-3 row">
-      <div class="col-md-6">
-        <%= pp.label :product_id, "商品" %>
-        <%= pp.collection_select :product_id, Product.all, :id, :name, { include_blank: "選択してください" }, class: "form-select" %>
+          <div class="mb-0">
+            <%= f.label :body, "商談内容", class: "form-label fw-medium" %>
+            <%= f.text_area :body, class: "form-control", rows: 6, 
+                placeholder: "商談の詳細内容を入力してください..." %>
+          </div>
+        </div>
       </div>
-      <div class="col-md-4">
-        <%= pp.label :quantity, "数量" %>
-        <%= pp.number_field :quantity, min: 1, class: "form-control" %>
-      </div>
-      <div class="col-md-2">
-        <%= pp.check_box :_destroy %>
-        <%= pp.label :_destroy, "削除" %>
+
+      <!-- 提案商品セクション -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="fas fa-box me-2"></i>提案商品と数量
+          </h5>
+        </div>
+        <div class="card-body">
+          <div id="product-fields">
+            <%= f.fields_for :post_products do |pp| %>
+              <div class="product-field mb-3 p-3 border rounded bg-light">
+                <div class="row align-items-end">
+                  <div class="col-md-5">
+                    <%= pp.label :product_id, "商品", class: "form-label fw-medium" %>
+                    <%= pp.collection_select :product_id, Product.all, :id, :name, 
+                        { include_blank: "商品を選択してください" }, 
+                        { class: "form-select" } %>
+                  </div>
+                  <div class="col-md-3">
+                    <%= pp.label :quantity, "数量", class: "form-label fw-medium" %>
+                    <div class="input-group">
+                      <%= pp.number_field :quantity, min: 1, class: "form-control", placeholder: "1" %>
+                      <span class="input-group-text">個</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check d-flex align-items-center h-100">
+                      <%= pp.check_box :_destroy, class: "form-check-input me-2" %>
+                      <%= pp.label :_destroy, "この商品を削除", class: "form-check-label text-danger" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if post.post_products.empty? %>
+            <p class="text-muted text-center mb-0">
+              <i class="fas fa-info-circle me-2"></i>
+              提案商品が追加されていません
+            </p>
+          <% end %>
+        </div>
       </div>
     </div>
-  <% end %>
-  <%= f.label :tag_ids, "タグを選択" %>
-  <%= f.collection_check_boxes :tag_ids, Tag.all, :id, :name do |cb| %>
-    <div class="form-check">
-      <%= cb.label(class: "form-check-label") { cb.check_box(class: "form-check-input") + cb.text } %>
-    </div>
-  <% end %>
 
-  <%= f.submit "保存する", class: "btn btn-primary" %>
+    <!-- 右カラム：ステータスとタグ -->
+    <div class="col-lg-4">
+      <!-- ステータス設定 -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="fas fa-tasks me-2"></i>ステータス設定
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :status, "ステータス", class: "form-label fw-medium" %>
+            <%= f.select :status, Post.statuses.keys.map { |s| [s.humanize, s] }, 
+                {}, { class: "form-select" } %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :result_status, "商談結果", class: "form-label fw-medium" %>
+            <%= f.select :result_status, Post.result_statuses.keys.map { |r| [r.humanize, r] }, 
+                {}, { class: "form-select" } %>
+          </div>
+
+          <div class="mb-0">
+            <%= f.label :reaction, "顧客の反応", class: "form-label fw-medium" %>
+            <%= f.select :reaction, Post.reactions.keys.map { |r| [r.humanize, r] }, 
+                {}, { class: "form-select" } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- タグ設定 -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="fas fa-tags me-2"></i>タグ設定
+          </h5>
+        </div>
+        <div class="card-body">
+          <% if Tag.any? %>
+            <%= f.collection_check_boxes :tag_ids, Tag.all, :id, :name do |cb| %>
+              <div class="form-check mb-2">
+                <%= cb.label(class: "form-check-label d-flex align-items-center") do %>
+                  <%= cb.check_box(class: "form-check-input me-2") %>
+                  <span class="badge bg-secondary"><%= cb.text %></span>
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted mb-0">
+              <i class="fas fa-info-circle me-2"></i>
+              利用可能なタグがありません
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <%= f.submit "保存する", class: "btn btn-primary btn-lg w-100" %>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>

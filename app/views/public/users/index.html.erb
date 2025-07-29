@@ -1,24 +1,130 @@
-<%= render 'search', user: @user %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-users me-2 text-primary"></i>
+      ユーザー一覧
+    </h2>
+  </div>
 
-<h2>ユーザー一覧</h2>
+  <!-- 検索・フィルターエリア -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">名前で検索</label>
+          <input type="text" class="form-control" placeholder="ユーザー名を入力...">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">役職で絞り込み</label>
+          <select class="form-select">
+            <option value="">すべての役職</option>
+            <option value="manager">マネージャー</option>
+            <option value="sales">営業</option>
+            <option value="support">サポート</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">地域で絞り込み</label>
+          <select class="form-select">
+            <option value="">すべての地域</option>
+            <option value="aichi">愛知</option>
+            <option value="mie">三重</option>
+            <option value="gihu">岐阜</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-outline-primary w-100">
+            <i class="fas fa-search me-1"></i>検索
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>名前</th>
-      <th>役職</th>
-      <th>地域</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
+  <!-- ユーザーカード一覧 -->
+  <div class="row">
     <% @users.each do |user| %>
-      <tr>
-        <td><%= user.last_name %><%= user.first_name %></td>
-        <td><%= user.position %></td>
-        <td><%= user.region %></td>
-        <td><%= link_to "詳細", user_path(user), class: "btn btn-sm btn-outline-info" %></td>
-      </tr>
+      <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm user-card">
+          <div class="card-body">
+            <!-- ユーザー情報ヘッダー -->
+            <div class="d-flex align-items-center mb-3">
+              <div class="user-avatar me-3">
+                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" 
+                     style="width: 50px; height: 50px;">
+                  <span class="text-white fw-bold fs-5">
+                    <%= user.last_name.first if user.last_name.present? %>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-grow-1">
+                <h5 class="card-title mb-1">
+                  <%= user.last_name %><%= user.first_name %>
+                </h5>
+                <p class="text-muted small mb-0">
+                  <i class="fas fa-envelope me-1"></i>
+                  <%= user.email if user.respond_to?(:email) %>
+                </p>
+              </div>
+            </div>
+
+            <!-- ユーザー詳細情報 -->
+            <div class="user-details">
+              <div class="mb-2">
+                <small class="text-muted">役職</small>
+                <p class="mb-0">
+                  <span class="badge bg-secondary">
+                    <i class="fas fa-briefcase me-1"></i>
+                    <%= user.position %>
+                  </span>
+                </p>
+              </div>
+              
+              <div class="mb-3">
+                <small class="text-muted">地域</small>
+                <p class="mb-0">
+                  <span class="badge bg-info">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    <%= user.region %>
+                  </span>
+                </p>
+              </div>
+              <!-- カードフッター -->
+          <div class="card-footer bg-white border-top">
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="fas fa-clock me-1"></i>
+                最終ログイン: 
+                <%= user.respond_to?(:last_sign_in_at) && user.last_sign_in_at ? 
+                    l(user.last_sign_in_at, format: :short) : '未記録' %>
+              </small>
+              <div class="btn-group" role="group">
+                <%= link_to "詳細", user_path(user), 
+                    class: "btn btn-sm btn-outline-info" %>
+                <% if @user == current_user %>
+                  <%= link_to "編集", edit_user_path(user), 
+                      class: "btn btn-sm btn-outline-primary" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <!-- 空状態 -->
+  <% if @users.empty? %>
+    <div class="text-center py-5">
+      <div class="mb-3">
+        <i class="fas fa-users fa-3x text-muted"></i>
+      </div>
+      <h4 class="text-muted">ユーザーが見つかりません</h4>
+    </div>
+  <% end %>
+
+  <!-- ページネーション -->
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @users if respond_to?(:paginate) %>
+  </div>
+</div>

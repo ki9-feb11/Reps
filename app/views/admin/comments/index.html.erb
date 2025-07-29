@@ -1,28 +1,65 @@
-<h2>コメント一覧</h2>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-box me-2 text-primary"></i>
+      コメント一覧
+    </h2>
+  </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>ユーザー</th>
-      <th>コメント</th>
-      <th>投稿タイトル</th>
-      <th>投稿日</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
+  <!-- コメント一覧 -->
+  <div class="row">
     <% @comments.each do |comment| %>
-      <tr>
-        <td><%= comment.user.last_name %></td>
-        <td><%= comment.body %></td>
-        <td><%= link_to comment.post.title, post_path(comment.post), target: "_blank" %></td>
-        <td><%= l(comment.created_at, format: :short) %></td>
-        <td>
-          <%= link_to '削除', admin_comment_path(comment), method: :delete,
+      <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm product-card">
+          <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 class="card-title mb-0 text-truncate">
+                <i class="fas fa-cube me-2 text-primary"></i>
+                <%= comment.user.last_name %>
+              </h5>
+              <span>
+                <%= comment.body %>
+              </span>
+              <span>
+                <td><%= link_to comment.post.title, admin_post_path(comment.post), target: "_blank" %></td>
+              </span>
+              <span>
+                <%= l(comment.created_at, format: :short) %>
+              </span>
+            </div>
+          </div>
+          <div class="card-footer bg-white border-top">
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="fas fa-calendar-alt me-1"></i>
+                <%= comment.respond_to?(:created_at) ? l(comment.created_at, format: :short) : '作成日不明' %>
+              </small>
+              <div class="btn-group" role="group">
+                <% if admin_signed_in? %>
+                  <%= link_to '削除', admin_comment_path(comment), method: :delete,
                       data: { confirm: '本当に削除しますか？' },
                       class: "btn btn-danger btn-sm" %>
-        </td>
-      </tr>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <!-- 空状態 -->
+  <% if @comments.empty? %>
+    <div class="text-center py-5">
+      <div class="mb-3">
+        <i class="fas fa-box-open fa-3x text-muted"></i>
+      </div>
+      <h4 class="text-muted">コメントが見つかりません</h4>
+    </div>
+  <% end %>
+
+  <!-- ページネーション -->
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @comments if respond_to?(:paginate) %>
+  </div>
+</div>

@@ -1,27 +1,150 @@
-<h1>顧客一覧（管理者）</h1>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-building me-2 text-primary"></i>
+      顧客一覧
+    </h2>
+    <%= link_to "新しい顧客を追加", new_admin_customer_path, class: "btn btn-primary" %>
+  </div>
 
-<%= link_to "新規顧客登録", new_admin_customer_path, class: "btn btn-primary mb-3" %>
-
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>顧客名</th>
-      <th>住所</th>
-      <th>業種</th>
-      <th>担当者</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
+  <!-- 顧客カード一覧 -->
+  <div class="row">
     <% @customers.each do |customer| %>
-      <tr>
-        <td><%= link_to customer.name, admin_customer_path(customer) %></td>
-        <td><%= customer.adress %></td>
-        <td><%= customer.industry %></td>
-        <td><%= customer.contact_person %></td>
-        <td><%= link_to "編集", edit_admin_customer_path(customer), class: "btn btn-sm btn-outline-secondary" %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm customer-card">
+          <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 class="card-title mb-0">
+                <i class="fas fa-building me-2 text-primary"></i>
+                <%= customer.name %>
+              </h5>
+              <span class="badge bg-<%= customer.respond_to?(:status) && customer.status == 'active' ? 'success' : 'secondary' %>">
+                <%= customer.respond_to?(:status) ? customer.status&.humanize || 'Active' : 'Active' %>
+              </span>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <!-- 顧客基本情報 -->
+            <div class="mb-3">
+              <% if customer.respond_to?(:industry) && customer.industry.present? %>
+                <div class="mb-2">
+                  <small class="text-muted">業界</small>
+                  <p class="mb-0">
+                    <span class="badge bg-info">
+                      <i class="fas fa-industry me-1"></i>
+                      <%= customer.industry %>
+                    </span>
+                  </p>
+                </div>
+              <% end %>
 
+              <% if customer.respond_to?(:company_size) && customer.company_size.present? %>
+                <div class="mb-2">
+                  <small class="text-muted">企業規模</small>
+                  <p class="mb-0">
+                    <span class="badge bg-secondary">
+                      <i class="fas fa-users me-1"></i>
+                      <%= customer.company_size %>
+                    </span>
+                  </p>
+                </div>
+              <% end %>
+
+              <% if customer.respond_to?(:location) && customer.location.present? %>
+                <div class="mb-2">
+                  <small class="text-muted">所在地</small>
+                  <p class="mb-0">
+                    <i class="fas fa-map-marker-alt me-1 text-muted"></i>
+                    <%= customer.location %>
+                  </p>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- 連絡先情報 -->
+            <% if customer.respond_to?(:email) && customer.email.present? %>
+              <div class="mb-2">
+                <small class="text-muted">メールアドレス</small>
+                <p class="mb-0 small">
+                  <i class="fas fa-envelope me-1 text-muted"></i>
+                  <%= customer.email %>
+                </p>
+              </div>
+            <% end %>
+
+            <% if customer.respond_to?(:phone) && customer.phone.present? %>
+              <div class="mb-3">
+                <small class="text-muted">電話番号</small>
+                <p class="mb-0 small">
+                  <i class="fas fa-phone me-1 text-muted"></i>
+                  <%= customer.phone %>
+                </p>
+              </div>
+            <% end %>
+
+            <!-- 商談統計 -->
+            <% if customer.respond_to?(:posts) %>
+              <div class="row text-center mb-3">
+                <div class="col-4">
+                  <div class="border-end">
+                    <div class="fw-bold text-primary"><%= customer.posts.count %></div>
+                    <small class="text-muted">商談数</small>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="border-end">
+                    <div class="fw-bold text-success">
+                      <%= customer.posts.where(result_status: 'success').count %>
+                    </div>
+                    <small class="text-muted">成功</small>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="fw-bold text-info">
+                    <%= customer.posts.where('created_at > ?', 1.month.ago).count %>
+                  </div>
+                  <small class="text-muted">今月</small>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="card-footer bg-white border-top">
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="fas fa-calendar-plus me-1"></i>
+                登録日: <%= customer.respond_to?(:created_at) ? l(customer.created_at, format: :short) : '不明' %>
+              </small>
+              <div class="btn-group" role="group">
+                <%= link_to "詳細", customer_path(customer), 
+                    class: "btn btn-sm btn-outline-info" %>
+                <% if admin_signed_in? %>
+                  <%= link_to "編集", edit_admin_customer_path(customer), 
+                      class: "btn btn-sm btn-outline-primary" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- 空状態 -->
+  <% if @customers.empty? %>
+    <div class="text-center py-5">
+      <div class="mb-3">
+        <i class="fas fa-building fa-3x text-muted"></i>
+      </div>
+      <h4 class="text-muted">顧客が見つかりません</h4>
+      <p class="text-muted">新しい顧客を追加してください。</p>
+      <%= link_to "新しい顧客を追加", new_admin_customer_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <!-- ページネーション -->
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @customers if respond_to?(:paginate) %>
+  </div>
+</div>

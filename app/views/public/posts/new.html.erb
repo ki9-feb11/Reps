@@ -1,16 +1,67 @@
-<h2>新規投稿</h2>
+<div class="container mt-4">
+  <!-- パンくずナビ -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <%= link_to "商談記録一覧", posts_path %>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        新規商談記録を作成
+      </li>
+    </ol>
+  </nav>
 
-<%= form_with model: @post, local: true do |f| %>
-  <% if @post.errors.any? %>
-    <div class="alert alert-danger">
-      <ul>
-        <% @post.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+  <!-- ページヘッダー -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0">
+        <i class="fas fa-plus-circle me-2 text-primary"></i>
+        新規商談記録を作成
+      </h2>
+      <p class="text-muted mb-0 mt-1">新しい商談の情報を入力してください</p>
     </div>
-  <% end %>
+    <%= link_to "一覧に戻る", posts_path, class: "btn btn-outline-secondary" %>
+  </div>
 
-  <%= render "form", post: @post, customers: @customers %>
+  <!-- フォーム -->
+  <%= render 'form', post: @post, customers: @customers %>
 
-<% end %>
+  <!-- ヘルプセクション -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card border-info">
+        <div class="card-header bg-info bg-opacity-10 border-info">
+          <h6 class="mb-0 text-info">
+            <i class="fas fa-lightbulb me-2"></i>
+            入力のヒント
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <h6 class="fw-bold">タイトル</h6>
+              <p class="small text-muted mb-0">
+                商談の概要がわかるタイトルをつけましょう。
+                例：「新サービス導入に関する提案」
+              </p>
+            </div>
+            <div class="col-md-4">
+              <h6 class="fw-bold">商談内容</h6>
+              <p class="small text-muted mb-0">
+                話し合った内容を詳しく記録しましょう。
+                課題、提案内容、次回アクションなど。
+              </p>
+            </div>
+            <div class="col-md-4">
+              <h6 class="fw-bold">ステータス・反応</h6>
+              <p class="small text-muted mb-0">
+                現在の進捗状況と顧客の反応を正確に記録することで、
+                次回の商談準備に活用できます。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
