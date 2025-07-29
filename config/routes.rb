@@ -31,8 +31,9 @@ Rails.application.routes.draw do
     get 'users/mypage', to: 'users#mypage', as: :mypage
     resources :users, only: [:index, :show, :edit, :update]
     resources :posts do
-      resources :comments, only: [:create, :destroy]
+      resources :comments, only: [:create]
     end
+    resources :comments, only: [:destroy]
     resources :customers, only: [:index, :show, :edit, :update]
     resources :products, only: [:index, :show]
   end
