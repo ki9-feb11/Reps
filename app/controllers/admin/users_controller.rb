@@ -26,7 +26,7 @@ class Admin::UsersController < ApplicationController
     if params[:position].present?
       @users = @users.where(position: params[:position])
     end
-    @users = User.order(created_at: :desc).page(params[:page]).per(10)
+    @users = @users.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def edit
