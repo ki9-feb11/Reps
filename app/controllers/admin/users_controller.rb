@@ -19,6 +19,13 @@ class Admin::UsersController < ApplicationController
 
   def index
     @users = User.all
+    if params[:name].present?
+      keyword = "%#{params[:name]}%"
+      @users = @users.where('last_name LIKE ? OR first_name LIKE ?', keyword, keyword)
+    end
+    if params[:position].present?
+      @users = @users.where(position: params[:position])
+    end
   end
 
   def edit

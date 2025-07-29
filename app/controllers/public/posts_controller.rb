@@ -21,7 +21,17 @@ class Public::PostsController < ApplicationController
   end
 
   def index
-    @posts = current_user.posts.includes(:products).order(created_at: :desc)
+    @posts = current_user.posts.includes(:products, :tags).order(created_at: :desc)
+
+    # キーワード検索
+    if params[:keyword].present?
+      @posts = @posts.where('title LIKE ? OR body LIKE ?', "%#{params[:keyword]}%", "%#{params[:keyword]}%")
+    end
+  
+    # タグ検索
+    if params[:tag_id].present?
+      @posts = @posts.joins(:tags).where(tags: { id: params[:tag_id] })
+    end
 
     #ページネーション
     @posts = @posts.page(params[:page]).per(10)

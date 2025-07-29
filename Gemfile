@@ -68,6 +68,9 @@ gem 'kaminari'
 # レイアウト調整
 gem 'bootstrap', '~> 5.3.0'
 
+# 検索機能
+gem 'ransack'
+
 gem 'jquery-rails'
 
 gem 'dotenv-rails'
