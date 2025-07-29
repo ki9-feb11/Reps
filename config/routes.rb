@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       resources :comments, only: [:create, :destroy]
     end
     resources :customers, only: [:index, :show, :edit, :update]
+    resources :products, only: [:index, :show]
   end
 
 end

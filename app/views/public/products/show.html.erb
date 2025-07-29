@@ -1,0 +1,13 @@
+<h1><%= @product.name %> の詳細</h1>
+
+<table class="table">
+  <tr><th>メーカー</th><td><%= @product.manufacturer %></td></tr>
+  <tr><th>カテゴリー</th><td><%= @product.category %></td></tr>
+  <tr><th>定価</th><td><%= number_to_currency(@product.list_price, unit: "¥") %></td></tr>
+  <tr><th>卸単価</th><td><%= number_to_currency(@product.wholesale_price, unit: "¥") %></td></tr>
+  <tr><th>原価</th><td><%= number_to_currency(@product.cost_price, unit: "¥") %></td></tr>
+</table>
+
+<div class="d-flex gap-2">
+  <%= link_to "一覧へ戻る", products_path, class: "btn btn-secondary" %>
+</div>
