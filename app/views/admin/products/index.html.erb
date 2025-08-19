@@ -62,7 +62,7 @@
                 <%= product.respond_to?(:created_at) ? l(product.created_at, format: :short) : '作成日不明' %>
               </small>
               <div class="btn-group" role="group">
-                <%= link_to "詳細", product_path(product), 
+                <%= link_to "詳細", admin_product_path(product), 
                     class: "btn btn-sm btn-outline-info" %>
                 <% if admin_signed_in? %>
                   <%= link_to "編集", edit_admin_product_path(product), 

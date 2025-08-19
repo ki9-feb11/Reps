@@ -117,7 +117,7 @@
                 登録日: <%= customer.respond_to?(:created_at) ? l(customer.created_at, format: :short) : '不明' %>
               </small>
               <div class="btn-group" role="group">
-                <%= link_to "詳細", customer_path(customer), 
+                <%= link_to "詳細", admin_customer_path(customer), 
                     class: "btn btn-sm btn-outline-info" %>
                 <% if admin_signed_in? %>
                   <%= link_to "編集", edit_admin_customer_path(customer), 

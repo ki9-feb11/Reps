@@ -10,19 +10,40 @@
   <!-- 検索・フィルターエリア -->
   <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <div class="row g-3">
-        <%= form_with url: admin_users_path, method: :get, local: true do |f| %>
-          <div class="col-md-4">
-            <%= f.label :name, "名前を検索" %>
-            <%= f.text_field :name, placeholder: "姓 または 名" %>
-          </div>
-          <div class="col-md-3">
-            <%= f.label :position, "役職を選択" %>
-            <%= f.select :position, User.positions.keys.map { |pos| [pos.titleize, pos] }, include_blank: "すべて" %>
-          </div>
-          <%= f.submit "検索" %>
-        <% end %>
-      </div>
+      <%= form_with url: users_path, method: :get, local: true, html: { class: "row g-3" } do %>
+        <div class="col-md-4">
+          <label class="form-label">名前で検索</label>
+          <%= text_field_tag :name, params[:name], class: "form-control", placeholder: "ユーザー名を入力..." %>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">役職で絞り込み</label>
+          <%= select_tag :position, options_for_select([
+            ['すべての役職', ''],
+            ['マネージャー', 'manager'],
+            ['営業', 'sales'],
+            ['サポート', 'support']
+          ], params[:position]), class: "form-select" %>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">地域で絞り込み</label>
+          <%= select_tag :region, options_for_select([
+            ['すべての地域', ''],
+            ['愛知', 'aichi'],
+            ['三重', 'mie'],
+            ['岐阜', 'gihu']
+          ], params[:region]), class: "form-select" %>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <%= button_tag type: :submit, class: "btn btn-outline-primary w-100" do %>
+            <i class="fas fa-search me-1"></i>検索
+          <% end %>
+        </div>
+        <div class="col-12">
+          <% if params[:name].present? || params[:position].present? || params[:region].present? %>
+            <%= link_to "検索をクリア", users_path, class: "btn btn-sm btn-outline-secondary" %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 
@@ -75,7 +96,7 @@
                 </p>
               </div>
 
-              <!-- 統計情報（もしあれば） -->
+              <!-- 統計情報 -->
               <% if user.respond_to?(:posts) %>
                 <div class="row text-center mb-3">
                   <div class="col-6">
@@ -105,7 +126,7 @@
                     l(user.last_sign_in_at, format: :short) : '未記録' %>
               </small>
               <div class="btn-group" role="group">
-                <%= link_to "詳細", user_path(user), 
+                <%= link_to "詳細", admin_user_path(user), 
                     class: "btn btn-sm btn-outline-info" %>
                 <% if user == current_admin %>
                   <%= link_to "編集", edit_admin_user_path(user), 

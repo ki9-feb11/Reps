@@ -1,26 +1,63 @@
-<h2>Log in</h2>
+<div class="card shadow-lg border-0">
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+  <div class="card-header bg-white border-0 text-center py-4">
+    <div class="mb-3">
+      <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary" 
+           style="width: 80px; height: 80px;">
+        <i class="fas fa-briefcase text-white" style="font-size: 2rem;"></i>
+      </div>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
+    <h3 class="mb-1 text-dark">商談管理システム</h3>
+    <p class="text-muted mb-0">ログインして続行してください</p>
   </div>
-<% end %>
 
-<%= render "public/shared/links" %>
+  <!-- ログインフォーム -->
+  <div class="card-body px-4 py-4">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <!-- メールアドレス -->
+      <div class="mb-3">
+        <%= f.label :email, "メールアドレス", class: "form-label fw-medium" %>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="fas fa-envelope text-muted"></i>
+          </span>
+          <%= f.email_field :email, 
+                autofocus: true, 
+                autocomplete: "email", 
+                class: "form-control border-start-0 ps-0",
+                placeholder: "例: user@example.com" %>
+        </div>
+      </div>
+
+      <!-- パスワード -->
+      <div class="mb-4">
+        <%= f.label :password, "パスワード", class: "form-label fw-medium" %>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="fas fa-lock text-muted"></i>
+          </span>
+          <%= f.password_field :password, 
+                autocomplete: "current-password",
+                class: "form-control border-start-0 border-end-0 ps-0",
+                placeholder: "パスワードを入力してください",
+                id: "password-field" %>
+          <button class="btn btn-outline-secondary border-start-0" type="button" id="togglePassword">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ログインボタン -->
+      <div class="d-grid mb-0">
+        <%= f.submit "ログイン", class: "btn btn-primary btn-lg py-3" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- フッター -->
+  <div class="card-footer bg-light border-0 text-center py-3">
+    <small class="text-muted">
+      初回ログインでお困りの場合は、システム管理者にお問い合わせください
+    </small>
+  </div>
+</div>

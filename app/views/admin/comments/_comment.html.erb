@@ -1,0 +1,6 @@
+<div id="comment-<%= comment.id %>" class="border rounded p-2 mb-2">
+  <p><strong><%= comment.user.last_name %>:</strong> <%= comment.body %></p>
+  <% if comment.user == current_user %>
+    <%= link_to "削除", post_comment_path(comment.post, comment), method: :delete, remote: true, data: { confirm: "削除してよろしいですか？" }, class: "btn btn-sm btn-danger" %>
+  <% end %>
+</div>

@@ -11,14 +11,24 @@ class Public::UsersController < ApplicationController
 
   def index
     @users = User.all
+    
+    # 名前検索
     if params[:name].present?
       keyword = "%#{params[:name]}%"
-      @users = @users.where('last_name LIKE ? OR first_name LIKE ?', keyword, keyword)
+      @users = @users.where('LOWER(last_name) LIKE LOWER(?) OR LOWER(first_name) LIKE LOWER(?)', keyword, keyword)
     end
+    
+    # 役職検索
     if params[:position].present?
       @users = @users.where(position: params[:position])
     end
-    @users = User.order(created_at: :desc).page(params[:page]).per(10)
+    
+    # 担当地域検索
+    if params[:region].present?
+      @users = @users.where(region: params[:region])
+    end
+    
+    @users = @users.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show

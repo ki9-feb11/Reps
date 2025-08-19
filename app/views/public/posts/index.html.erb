@@ -7,19 +7,30 @@
   <!-- 検索・フィルターエリア -->
   <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <div class="row g-3">
-        <%= form_with url: posts_path, method: :get, local: true, html: { class: "row g-3" } do %>
-          <div class="col-md-4">
-            <label class="form-label">投稿を検索</label>
-            <%= text_field_tag :title, params[:title], class: "form-control", placeholder: "タイトルを入力..." %>
-          </div>
-          <div class="col-md-2 d-flex align-items-end">
-            <%= button_tag type: :submit, class: "btn btn-outline-primary w-100" do %>
-              <i class="fas fa-search me-1"></i>検索
-            <% end %>
-          </div>
-        <% end %>
-      </div>
+      <%= form_with url: posts_path, method: :get, local: true, html: { class: "row g-3" } do %>
+        <div class="col-md-4">
+          <label class="form-label">タイトル検索</label>
+          <%= text_field_tag :title, params[:title], class: "form-control", placeholder: "投稿タイトルを入力..." %>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">投稿者（姓）</label>
+          <%= text_field_tag :author_last_name, params[:author_last_name], class: "form-control", placeholder: "姓を入力..." %>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">投稿者（名）</label>
+          <%= text_field_tag :author_first_name, params[:author_first_name], class: "form-control", placeholder: "名を入力..." %>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <%= button_tag type: :submit, class: "btn btn-outline-primary w-100" do %>
+            <i class="fas fa-search me-1"></i>検索
+          <% end %>
+        </div>
+        <div class="col-12">
+          <% if params[:title].present? || params[:author_last_name].present? || params[:author_first_name].present? %>
+            <%= link_to "検索をクリア", posts_path, class: "btn btn-sm btn-outline-secondary" %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 

@@ -9,35 +9,40 @@
   <!-- 検索・フィルターエリア -->
   <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <div class="row g-3">
+      <%= form_with url: users_path, method: :get, local: true, html: { class: "row g-3" } do %>
         <div class="col-md-4">
           <label class="form-label">名前で検索</label>
-          <input type="text" class="form-control" placeholder="ユーザー名を入力...">
+          <%= text_field_tag :name, params[:name], class: "form-control", placeholder: "ユーザー名を入力..." %>
         </div>
         <div class="col-md-3">
           <label class="form-label">役職で絞り込み</label>
-          <select class="form-select">
-            <option value="">すべての役職</option>
-            <option value="manager">マネージャー</option>
-            <option value="sales">営業</option>
-            <option value="support">サポート</option>
-          </select>
+          <%= select_tag :position, options_for_select([
+            ['すべての役職', ''],
+            ['マネージャー', 'manager'],
+            ['営業', 'sales'],
+            ['サポート', 'support']
+          ], params[:position]), class: "form-select" %>
         </div>
         <div class="col-md-3">
           <label class="form-label">地域で絞り込み</label>
-          <select class="form-select">
-            <option value="">すべての地域</option>
-            <option value="aichi">愛知</option>
-            <option value="mie">三重</option>
-            <option value="gihu">岐阜</option>
-          </select>
+          <%= select_tag :region, options_for_select([
+            ['すべての地域', ''],
+            ['愛知', 'aichi'],
+            ['三重', 'mie'],
+            ['岐阜', 'gihu']
+          ], params[:region]), class: "form-select" %>
         </div>
         <div class="col-md-2 d-flex align-items-end">
-          <button class="btn btn-outline-primary w-100">
+          <%= button_tag type: :submit, class: "btn btn-outline-primary w-100" do %>
             <i class="fas fa-search me-1"></i>検索
-          </button>
+          <% end %>
         </div>
-      </div>
+        <div class="col-12">
+          <% if params[:name].present? || params[:position].present? || params[:region].present? %>
+            <%= link_to "検索をクリア", users_path, class: "btn btn-sm btn-outline-secondary" %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 
@@ -89,7 +94,10 @@
                   </span>
                 </p>
               </div>
-              <!-- カードフッター -->
+            </div>
+          </div>
+          
+          <!-- カードフッター -->
           <div class="card-footer bg-white border-top">
             <div class="d-flex justify-content-between align-items-center">
               <small class="text-muted">
@@ -101,7 +109,7 @@
               <div class="btn-group" role="group">
                 <%= link_to "詳細", user_path(user), 
                     class: "btn btn-sm btn-outline-info" %>
-                <% if @user == current_user %>
+                <% if user == current_user %>
                   <%= link_to "編集", edit_user_path(user), 
                       class: "btn btn-sm btn-outline-primary" %>
                 <% end %>
@@ -120,6 +128,10 @@
         <i class="fas fa-users fa-3x text-muted"></i>
       </div>
       <h4 class="text-muted">ユーザーが見つかりません</h4>
+      <% if params[:name].present? || params[:position].present? || params[:region].present? %>
+        <p class="text-muted">検索条件を変更してもう一度お試しください。</p>
+        <%= link_to "すべてのユーザーを表示", users_path, class: "btn btn-primary" %>
+      <% end %>
     </div>
   <% end %>
 
