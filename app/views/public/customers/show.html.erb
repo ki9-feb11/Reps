@@ -1,14 +1,232 @@
-<h1><%= @customer.name %> の詳細</h1>
+<div class="container mt-4">
+  <!-- ヘッダー部分 -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <%= link_to customers_path, class: "btn btn-outline-secondary btn-sm mb-3" do %>
+        <i class="fas fa-arrow-left me-1"></i>顧客一覧に戻る
+      <% end %>
+    </div>
+  </div>
 
-<table class="table">
-  <tr><th>住所</th><td><%= @customer.adress %></td></tr>
-  <tr><th>業種</th><td><%= @customer.industry %></td></tr>
-  <tr><th>担当者</th><td><%= @customer.contact_person %></td></tr>
-  <tr><th>キーマン</th><td><%= @customer.key_person %></td></tr>
-  <tr><th>備考</th><td><%= simple_format(@customer.notes) %></td></tr>
-</table>
+  <div class="row">
+    <!-- 顧客基本情報 -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-building me-2"></i>
+            <%= @customer.name %>
+          </h4>
+        </div>
+        <div class="card-body">
+          <!-- 基本情報 -->
+          <div class="customer-info">
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                <span class="text-muted small fw-semibold">住所</span>
+              </div>
+              <p class="mb-0 ms-4">
+                <%= @customer.adress.presence || "未設定" %>
+              </p>
+            </div>
 
-<div class="d-flex gap-2">
-  <%= link_to "編集", edit_customer_path(@customer), class: "btn btn-primary" %>
-  <%= link_to "一覧へ戻る", customers_path, class: "btn btn-secondary" %>
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-industry text-primary me-2"></i>
+                <span class="text-muted small fw-semibold">業種</span>
+              </div>
+              <div class="ms-4">
+                <span class="badge bg-info fs-6">
+                  <%= @customer.industry.presence || "未設定" %>
+                </span>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-user-tie text-primary me-2"></i>
+                <span class="text-muted small fw-semibold">担当者</span>
+              </div>
+              <p class="mb-0 ms-4 fw-medium">
+                <%= @customer.contact_person.presence || "未設定" %>
+              </p>
+            </div>
+
+            <div class="mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-crown text-warning me-2"></i>
+                <span class="text-muted small fw-semibold">キーマン</span>
+              </div>
+              <p class="mb-0 ms-4 fw-medium">
+                <%= @customer.key_person.presence || "未設定" %>
+              </p>
+            </div>
+
+            <% if @customer.notes.present? %>
+              <div class="mb-4">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-sticky-note text-primary me-2"></i>
+                  <span class="text-muted small fw-semibold">備考</span>
+                </div>
+                <div class="ms-4">
+                  <div class="bg-light p-3 rounded">
+                    <%= simple_format(@customer.notes) %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- アクションボタン -->
+          <div class="d-flex gap-2 mt-4">
+            <%= link_to edit_customer_path(@customer), class: "btn btn-primary flex-fill" do %>
+              <i class="fas fa-edit me-1"></i>編集
+            <% end %>
+            <%= link_to customers_path, class: "btn btn-outline-secondary flex-fill" do %>
+              <i class="fas fa-list me-1"></i>一覧
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 商談履歴・統計情報 -->
+    <div class="col-lg-8">
+      <!-- 統計カード -->
+      <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+          <div class="card bg-primary text-white text-center">
+            <div class="card-body py-3">
+              <div class="fs-4 fw-bold">
+                <%= @customer.posts.count if @customer.respond_to?(:posts) %>
+              </div>
+              <small>総商談数</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-success text-white text-center">
+            <div class="card-body py-3">
+              <div class="fs-4 fw-bold">
+                <%= @customer.posts.where(result_status: 'Ordered').count if @customer.respond_to?(:posts) %>
+              </div>
+              <small>成功案件</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-warning text-white text-center">
+            <div class="card-body py-3">
+              <div class="fs-4 fw-bold">
+                <%= @customer.posts.where(result_status: 'Progressing').count if @customer.respond_to?(:posts) %>
+              </div>
+              <small>進行中</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card bg-info text-white text-center">
+            <div class="card-body py-3">
+              <div class="fs-4 fw-bold">
+                <% if @customer.respond_to?(:posts) && @customer.posts.count > 0 %>
+                  <%= (@customer.posts.where(result_status: 'success').count.to_f / @customer.posts.count * 100).round(1) %>%
+                <% else %>
+                  0%
+                <% end %>
+              </div>
+              <small>成功率</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 商談履歴 -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">
+              <i class="fas fa-handshake me-2 text-primary"></i>
+              商談履歴
+            </h4>
+            <% if @customer.respond_to?(:posts) %>
+              <%= link_to new_post_path(customer_id: @customer.id), class: "btn btn-sm btn-primary" do %>
+                <i class="fas fa-plus me-1"></i>新規商談
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <% if @customer.respond_to?(:posts) && @customer.posts.any? %>
+            <div class="timeline">
+              <% @customer.posts.order(created_at: :desc).each_with_index do |post, index| %>
+                <div class="timeline-item <%= 'timeline-item-last' if index == @customer.posts.count - 1 %>">
+                  <div class="timeline-marker bg-primary"></div>
+                  <div class="timeline-content">
+                    <div class="card border-0 bg-light">
+                      <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                          <h6 class="card-title mb-0">
+                            <%= link_to post.title, post_path(post), 
+                                class: "text-decoration-none text-primary fw-semibold" %>
+                          </h6>
+                          <small class="text-muted">
+                            <%= l(post.created_at, format: :short) %>
+                          </small>
+                        </div>
+                        
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                          <% if post.respond_to?(:status) %>
+                            <span class="badge bg-secondary small">
+                              <%= post.status_i18n if post.respond_to?(:status_i18n) %>
+                            </span>
+                          <% end %>
+                          
+                          <% if post.respond_to?(:result_status) %>
+                            <span class="badge bg-<%= post.result_status == 'success' ? 'success' : post.result_status == 'pending' ? 'warning' : 'secondary' %> small">
+                              <%= post.result_status_i18n if post.respond_to?(:result_status_i18n) %>
+                            </span>
+                          <% end %>
+                          
+                          <% if post.respond_to?(:reaction) %>
+                            <span class="badge bg-<%= post.reaction == 'positive' ? 'success' : post.reaction == 'neutral' ? 'warning' : 'danger' %> small">
+                              <%= post.reaction_i18n if post.respond_to?(:reaction_i18n) %>
+                            </span>
+                          <% end %>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                          <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>
+                            <%= post.user.last_name %><%= post.user.first_name if post.respond_to?(:user) %>
+                          </small>
+                          <%= link_to post_path(post), class: "btn btn-sm btn-outline-info" do %>
+                            <i class="fas fa-eye me-1"></i>詳細
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <div class="mb-3">
+                <i class="fas fa-handshake fa-3x text-muted"></i>
+              </div>
+              <h5 class="text-muted">商談履歴がありません</h5>
+              <p class="text-muted">この顧客との商談記録はまだありません。</p>
+              <% if @customer.respond_to?(:posts) %>
+                <%= link_to new_post_path(customer_id: @customer.id), class: "btn btn-primary" do %>
+                  <i class="fas fa-plus me-1"></i>最初の商談を記録
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,27 +1,230 @@
-<h1>ユーザー詳細</h1>
+<div class="container mt-4">
+  <!-- ヘッダー部分 -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <%= link_to admin_users_path, class: "btn btn-outline-secondary btn-sm mb-3" do %>
+        <i class="fas fa-arrow-left me-1"></i>ユーザー一覧に戻る
+      <% end %>
+    </div>
+  </div>
 
-<%= link_to '編集', edit_admin_user_path(@user), class: 'btn btn-sm btn-info' %>
-<%= link_to '削除', admin_user_path(@user), method: :delete, confirm: '本当に削除しますか？', class: 'btn btn-sm btn-danger' %>
-<%= link_to '一覧へ戻る', admin_users_path(@user), class: 'btn btn-sm btn-success' %>
+  <div class="row">
+    <!-- プロフィール情報 -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body text-center">
+          <!-- ユーザーアバター -->
+          <div class="mb-4">
+            <div class="rounded-circle bg-primary mx-auto d-flex align-items-center justify-content-center" 
+                 style="width: 120px; height: 120px;">
+              <span class="text-white fw-bold" style="font-size: 3rem;">
+                <%= @user.last_name.first if @user.last_name.present? %>
+              </span>
+            </div>
+          </div>
 
-<h5>基本情報</h5>
+          <!-- ユーザー名 -->
+          <h3 class="card-title mb-2">
+            <%= @user.last_name %><%= @user.first_name %>
+          </h3>
+          
+          <!-- 基本情報 -->
+          <div class="user-info">
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-center mb-2">
+                <i class="fas fa-envelope text-muted me-2"></i>
+                <span class="text-muted small">メールアドレス</span>
+              </div>
+              <p class="mb-0 fw-medium"><%= @user.email %></p>
+            </div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>メールアドレス</th>
-      <th>姓</th>
-      <th>名</th>
-      <th>作成日</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><%= @user.email %></td>
-      <td><%= @user.last_name %></td>
-      <td><%= @user.first_name %></td>
-      <td><%= @user.created_at.strftime('%Y/%m/%d') %></td>
-    </tr>
-  </tbody>
-</table>
+            <% if @user.respond_to?(:position) && @user.position.present? %>
+              <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                  <i class="fas fa-briefcase text-muted me-2"></i>
+                  <span class="text-muted small">役職</span>
+                </div>
+                <span class="badge bg-secondary fs-6">
+                  <%= @user.position %>
+                </span>
+              </div>
+            <% end %>
+
+            <% if @user.respond_to?(:region) && @user.region.present? %>
+              <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                  <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                  <span class="text-muted small">担当地域</span>
+                </div>
+                <span class="badge bg-info fs-6">
+                  <%= @user.region %>
+                </span>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-center mb-2">
+                <i class="fas fa-calendar-plus text-muted me-2"></i>
+                <span class="text-muted small">アカウント作成日</span>
+              </div>
+              <p class="mb-0 text-muted">
+                <%= @user.created_at.strftime('%Y年%m月%d日') %>
+              </p>
+            </div>
+
+            <% if @user.respond_to?(:last_sign_in_at) && @user.last_sign_in_at %>
+              <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                  <i class="fas fa-clock text-muted me-2"></i>
+                  <span class="text-muted small">最終ログイン</span>
+                </div>
+                <p class="mb-0 text-muted">
+                  <%= l(@user.last_sign_in_at, format: :short) %>
+                </p>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- アクションボタン -->
+          <div class="mt-4">
+            <div class="d-grid gap-2">
+              <%= link_to edit_admin_user_path(@user), class: "btn btn-info" do %>
+                <i class="fas fa-edit me-1"></i>編集
+              <% end %>
+              
+              <%= button_to admin_user_path(@user), method: :delete, 
+                  data: { confirm: "本当に削除しますか？" }, 
+                  class: "btn btn-danger" do %>
+                <i class="fas fa-trash me-1"></i>削除
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 投稿一覧・統計情報 -->
+    <div class="col-lg-8">
+      <!-- 統計カード -->
+      <% if @user.respond_to?(:posts) %>
+        <div class="row mb-4">
+          <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white text-center">
+              <div class="card-body py-3">
+                <div class="fs-4 fw-bold">
+                  <%= @user.posts.count %>
+                </div>
+                <small>総投稿数</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white text-center">
+              <div class="card-body py-3">
+                <div class="fs-4 fw-bold">
+                  <%= @user.posts.where(result_status: 'Ordered').count %>
+                </div>
+                <small>成功案件</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white text-center">
+              <div class="card-body py-3">
+                <div class="fs-4 fw-bold">
+                  <% if @user.posts.count > 0 %>
+                    <%= (@user.posts.where(result_status: 'Ordered').count.to_f / @user.posts.count * 100).round(1) %>%
+                  <% else %>
+                    0%
+                  <% end %>
+                </div>
+                <small>成功率</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- 投稿一覧 -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">
+              <i class="fas fa-newspaper me-2 text-primary"></i>
+              投稿一覧
+            </h4>
+            <% if @user.respond_to?(:posts) %>
+              <span class="badge bg-light text-dark">
+                <%= @user.posts.count %>件
+              </span>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <% if @user.respond_to?(:posts) && @user.posts.any? %>
+            <div class="row g-3">
+              <% @user.posts.order(created_at: :desc).each do |post| %>
+                <div class="col-12">
+                  <div class="card border-0 bg-light">
+                    <div class="card-body p-3">
+                      <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                          <h6 class="card-title mb-2">
+                            <%= link_to post.title, post_path(post), 
+                                class: "text-decoration-none text-primary fw-semibold" %>
+                          </h6>
+                          
+                          <!-- 投稿の詳細情報 -->
+                          <div class="d-flex flex-wrap gap-2 mb-2">
+                            <% if post.respond_to?(:customer) && post.customer %>
+                              <small class="text-muted">
+                                <i class="fas fa-building me-1"></i>
+                                <%= post.customer.name %>
+                              </small>
+                            <% end %>
+                            
+                            <% if post.respond_to?(:status) %>
+                              <span class="badge bg-primary small">
+                                <%= post.status_i18n if post.respond_to?(:status_i18n) %>
+                              </span>
+                            <% end %>
+                            
+                            <% if post.respond_to?(:result_status) %>
+                              <span class="badge bg-<%= post.result_status == 'success' ? 'success' : post.result_status == 'pending' ? 'warning' : 'secondary' %> small">
+                                <%= post.result_status_i18n if post.respond_to?(:result_status_i18n) %>
+                              </span>
+                            <% end %>
+                          </div>
+                          
+                          <small class="text-muted">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            <%= l(post.created_at, format: :short) %>
+                          </small>
+                        </div>
+                        
+                        <div class="ms-3">
+                          <%= link_to post_path(post), class: "btn btn-sm btn-outline-info" do %>
+                            <i class="fas fa-eye me-1"></i>詳細
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <div class="mb-3">
+                <i class="fas fa-inbox fa-3x text-muted"></i>
+              </div>
+              <h5 class="text-muted">投稿はありません</h5>
+              <p class="text-muted">まだ投稿が作成されていません。</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

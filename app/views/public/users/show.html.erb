@@ -1,20 +1,172 @@
-<h2><%= @user.last_name %> さんのプロフィール</h2>
+<div class="container mt-4">
+  <!-- ヘッダー部分 -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <%= link_to users_path, class: "btn btn-outline-secondary btn-sm mb-3" do %>
+        <i class="fas fa-arrow-left me-1"></i>ユーザー一覧に戻る
+      <% end %>
+    </div>
+  </div>
 
-<p><strong>メールアドレス：</strong> <%= @user.email %></p>
-<p><strong>役職：</strong> <%= @user.position %></p>
-<p><strong>担当地域：</strong> <%= @user.region %></p>
+  <div class="row">
+    <!-- プロフィール情報 -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body text-center">
+          <!-- ユーザーアバター -->
+          <div class="mb-4">
+            <div class="rounded-circle bg-primary mx-auto d-flex align-items-center justify-content-center" 
+                 style="width: 120px; height: 120px;">
+              <span class="text-white fw-bold" style="font-size: 3rem;">
+                <%= @user.last_name.first if @user.last_name.present? %>
+              </span>
+            </div>
+          </div>
 
-<h4>投稿一覧</h4>
-<% if @posts.any? %>
-  <ul class="list-group">
-    <% @posts.each do |post| %>
-      <li class="list-group-item">
-        <%= link_to post.title, post_path(post) %>（<%= l(post.created_at, format: :short) %>）
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>投稿はありません。</p>
-<% end %>
+          <!-- ユーザー名 -->
+          <h3 class="card-title mb-2">
+            <%= @user.last_name %><%= @user.first_name %>
+          </h3>
+          
+          <!-- 基本情報 -->
+          <div class="user-info">
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-center mb-2">
+                <i class="fas fa-envelope text-muted me-2"></i>
+                <span class="text-muted small">メールアドレス</span>
+              </div>
+              <p class="mb-0 fw-medium"><%= @user.email %></p>
+            </div>
 
-<%= link_to "編集する", edit_user_path(@user), class: "btn btn-outline-primary mt-3" if current_user == @user %>
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-center mb-2">
+                <i class="fas fa-briefcase text-muted me-2"></i>
+                <span class="text-muted small">役職</span>
+              </div>
+              <span class="badge bg-secondary fs-6">
+                <%= @user.position %>
+              </span>
+            </div>
+
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-center mb-2">
+                <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                <span class="text-muted small">担当地域</span>
+              </div>
+              <span class="badge bg-info fs-6">
+                <%= @user.region %>
+              </span>
+            </div>
+
+            <% if @user.respond_to?(:last_sign_in_at) && @user.last_sign_in_at %>
+              <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                  <i class="fas fa-clock text-muted me-2"></i>
+                  <span class="text-muted small">最終ログイン</span>
+                </div>
+                <p class="mb-0 text-muted">
+                  <%= l(@user.last_sign_in_at, format: :short) %>
+                </p>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- アクションボタン -->
+          <div class="mt-4">
+            <% if current_user == @user %>
+              <%= link_to edit_user_path(@user), class: "btn btn-primary" do %>
+                <i class="fas fa-edit me-1"></i>プロフィール編集
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 投稿一覧 -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">
+              <i class="fas fa-newspaper me-2 text-primary"></i>
+              投稿一覧
+            </h4>
+            <span class="badge bg-light text-dark">
+              <%= @posts.count %>件
+            </span>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <% if @posts.any? %>
+            <div class="row g-3">
+              <% @posts.each do |post| %>
+                <div class="col-12">
+                  <div class="card border-0 bg-light">
+                    <div class="card-body p-3">
+                      <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                          <h6 class="card-title mb-2">
+                            <%= link_to post.title, post_path(post), 
+                                class: "text-decoration-none text-primary fw-semibold" %>
+                          </h6>
+                          
+                          <!-- 投稿の詳細情報 -->
+                          <div class="d-flex flex-wrap gap-2 mb-2">
+                            <% if post.respond_to?(:customer) && post.customer %>
+                              <small class="text-muted">
+                                <i class="fas fa-building me-1"></i>
+                                <%= post.customer.name %>
+                              </small>
+                            <% end %>
+                            
+                            <% if post.respond_to?(:status) %>
+                              <span class="badge bg-primary small">
+                                <%= post.status_i18n if post.respond_to?(:status_i18n) %>
+                              </span>
+                            <% end %>
+                            
+                            <% if post.respond_to?(:result_status) %>
+                              <span class="badge bg-<%= post.result_status == 'success' ? 'success' : post.result_status == 'pending' ? 'warning' : 'secondary' %> small">
+                                <%= post.result_status_i18n if post.respond_to?(:result_status_i18n) %>
+                              </span>
+                            <% end %>
+                          </div>
+                          
+                          <small class="text-muted">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            <%= l(post.created_at, format: :short) %>
+                          </small>
+                        </div>
+                        
+                        <div class="ms-3">
+                          <%= link_to post_path(post), class: "btn btn-sm btn-outline-info" do %>
+                            <i class="fas fa-eye me-1"></i>詳細
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <div class="mb-3">
+                <i class="fas fa-inbox fa-3x text-muted"></i>
+              </div>
+              <h5 class="text-muted">投稿はありません</h5>
+              <p class="text-muted">まだ投稿が作成されていません。</p>
+              <% if current_user == @user %>
+                <%= link_to new_post_path, class: "btn btn-primary" do %>
+                  <i class="fas fa-plus me-1"></i>最初の投稿を作成
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
